@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Pembelajaran Vedic Math</title>
+    <style>
+        /* Desain UI Sederhana dan Bersih */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f7f6;
+            margin: 0;
+        }
+        .game-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 { color: #2c3e50; font-size: 24px; margin-bottom: 5px; }
+        .subtitle { color: #7f8c8d; font-size: 14px; margin-bottom: 20px; }
+        .question { font-size: 42px; font-weight: bold; margin: 20px 0; color: #2980b9; }
+        input {
+            font-size: 24px;
+            padding: 10px;
+            width: 70%;
+            text-align: center;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: #3498db; }
+        button {
+            font-size: 16px;
+            padding: 10px 25px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #219150; }
+        .feedback { margin-top: 15px; font-size: 18px; font-weight: bold; min-height: 24px; }
+        .hint-btn {
+            font-size: 14px;
+            color: #e67e22;
+            background: none;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .score-board {
+            margin-top: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #34495e;
+            padding-top: 15px;
+            border-top: 1px solid #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Vedic Math Master</h1>
+        <div class="subtitle">Trik: Perkalian Cepat Angka Mendekati 100</div>
+        
+        <div class="question" id="question">-- x --</div>
+        
+        <input type="number" id="answer" placeholder="Jawabanmu" autofocus>
+        <br>
+        <button onclick="checkAnswer()">Kirim Jawaban</button>
+        
+        <div class="feedback" id="feedback"></div>
+        <button class="hint-btn" onclick="showHint()">Bantuan: Cara Vedic</button>
+        
+        <div class="score-board">Skor: <span id="score">0</span></div>
+    </div>
+
+    <script>
+        let num1, num2, correctAnswer;
+        let score = 0;
+
+        // Fungsi untuk membuat soal baru secara acak (angka 90-99)
+        function generateQuestion() {
+            num1 = Math.floor(Math.random() * 10) + 90;
+            num2 = Math.floor(Math.random() * 10) + 90;
+            correctAnswer = num1 * num2;
+            
+            document.getElementById('question').innerText = `${num1} x ${num2}`;
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').innerText = '';
+            document.getElementById('answer').focus();
+        }
+
+        // Fungsi mengecek jawaban user
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            const feedbackEl = document.getElementById('feedback');
+            
+            if (isNaN(userAnswer)) {
+                feedbackEl.innerText = "Masukkan angka yang valid!";
+                feedbackEl.style.color = "#e74c3c";
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                feedbackEl.innerText = "Benar! Kerja Bagus!";
+                feedbackEl.style.color = "#27ae60";
+                score += 10;
+                document.getElementById('score').innerText = score;
+                // Jeda 1.5 detik sebelum soal baru muncul
+                setTimeout(generateQuestion, 1500);
+            } else {
+                feedbackEl.innerText = "Salah, coba hitung lagi!";
+                feedbackEl.style.color = "#e74c3c";
+            }
+        }
+
+        // Fungsi menampilkan pop-up logika Vedic Math (Nikhilam)
+        function showHint() {
+            const diff1 = 100 - num1;
+            const diff2 = 100 - num2;
+            const leftPart = num1 - diff2; // Menyilang
+            const rightPart = diff1 * diff2;
+            
+            // Format bagian kanan agar selalu 2 digit (misal: 2 jadi 02)
+            const rightPartStr = rightPart < 10 ? "0" + rightPart : rightPart;
+
+            const penjelasan = `Langkah Trik Vedic (Base 100):\n\n` +
+                               `1. Kurangi tiap angka dengan 100:\n` +
+                               `   ${num1} kurangnya ${diff1} (-${diff1})\n` +
+                               `   ${num2} kurangnya ${diff2} (-${diff2})\n\n` +
+                               `2. Bagian Kiri (Kurangi menyilang):\n` +
+                               `   ${num1} - ${diff2} = ${leftPart}\n\n` +
+                               `3. Bagian Kanan (Kalikan kekurangannya):\n` +
+                               `   ${diff1} x ${diff2} = ${rightPartStr}\n\n` +
+                               `Gabungkan Kiri & Kanan: ${leftPart}${rightPartStr}`;
+            
+            alert(penjelasan);
+        }
+
+        // Memungkinkan user menekan tombol "Enter" di keyboard untuk menjawab
+        document.getElementById("answer").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkAnswer();
+            }
+        });
+
+        // Memulai game saat halaman dimuat
+        window.onload = generateQuestion;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Matematika Veda - Vedic Math Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Fredoka', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#a78bfa',
+                            DEFAULT: '#7c3aed',
+                            dark: '#5b21b6',
+                        },
+                        accent: {
+                            yellow: '#fbbf24',
+                            green: '#34d399',
+                            red: '#f87171',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800 font-sans selection:bg-brand-light selection:text-white">
+
+    <!-- Container Utama -->
+    <div id="app" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col">
+        
+        <!-- Header / Navbar -->
+        <header class="bg-brand text-white p-4 shadow-md z-10 sticky top-0">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold tracking-wide">VedicMath<span class="text-accent-yellow">.ID</span></h1>
+                <div id="user-display" class="hidden text-sm font-semibold bg-brand-dark px-3 py-1 rounded-full items-center gap-2">
+                    <span id="header-username">User</span>
+                    <span class="bg-accent-yellow text-brand-dark text-xs px-1.5 py-0.5 rounded-full" id="header-level">Lvl 1</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="flex-grow p-4 relative">
+            <!-- Dynamic Content Loaded via JS -->
+            <div class="flex items-center justify-center h-full text-gray-400">
+                <p>Memuat Aplikasi...</p>
+            </div>
+        </main>
+
+        <!-- Footer / Navigation (Optional, maybe for back/home) -->
+        <footer class="bg-gray-50 p-3 text-center text-xs text-gray-400 border-t">
+            &copy; 2024 Latihan Matematika Veda
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Pembelajaran Vedic Math</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --bg: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg);
+        }
+        /* Sidebar Navigasi */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 20px;
+            padding: 0 15px;
+        }
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-left: 4px solid transparent;
+        }
+        .menu-item:hover, .menu-item.active {
+            background-color: #34495e;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        /* Area Konten Utama */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header-text {
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+        
+        /* Area Ilustrasi Visual */
+        .illustration-box {
+            background: white;
+            border: 2px dashed var(--secondary);
+            border-radius: 12px;
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            min-height: 150px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .step-highlight { color: var(--accent); font-weight: bold; }
+        .math-visual { text-align: center; line-height: 1.6; }
+
+        /* Area Interaktif */
+        .interactive-area {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        .question { font-size: 48px; font-weight: bold; color: var(--primary); margin: 20px 0; }
+        input {
+            font-size: 24px;
+            padding: 10px;
+            width: 150px;
+            text-align: center;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            outline: none;
+        }
+        input:focus { border-color: var(--secondary); }
+        .btn-group { margin-top: 20px; }
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            margin: 0 5px;
+        }
+        .btn-submit { background-color: #27ae60; }
+        .btn-submit:hover { background-color: #219150; }
+        .btn-hint { background-color: #f39c12; }
+        .btn-hint:hover { background-color: #e67e22; }
+        #feedback { margin-top: 15px; font-size: 18px; font-weight: bold; min-height: 24px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar" id="sidebar">
+        <h2>📚 Modul Vedic Math</h2>
+        </div>
+
+    <div class="content">
+        <div class="header-text">
+            <h1 id="module-title">Pilih Modul Pembelajaran</h1>
+            <p id="module-desc">Pilih salah satu teknik di menu sebelah kiri untuk mulai belajar dan berlatih.</p>
+        </div>
+
+        <div class="illustration-box" id="illustration-box">
+            <div style="color: #7f8c8d; font-size: 18px;">Area ilustrasi visual akan muncul di sini...</div>
+        </div>
+
+        <div class="interactive-area" style="display: none;" id="interactive-area">
+            <div class="question" id="question">--</div>
+            <input type="number" id="answer" placeholder="Jawaban" autocomplete="off">
+            <div class="btn-group">
+                <button class="btn-submit" onclick="checkAnswer()">Kirim</button>
+                <button class="btn-hint" onclick="showIllustration()">Lihat Ilustrasi</button>
+            </div>
+            <div id="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // Arsitektur Data Berbasis Objek (Mudah untuk di-scale dan ditambah modul baru)
+        const vedicModules = [
+            {
+                id: 'modul1',
+                title: 'Bab 1: Perkalian 11',
+                desc: 'Trik cepat mengalikan angka 2 digit dengan 11. Cukup pisahkan angka depan dan belakang, lalu sisipkan jumlah keduanya di tengah.',
+                generateLogic: function() {
+                    // Angka acak 11-89 (dibatasi agar jumlah tengah < 10 untuk level dasar)
+                    let num;
+                    do {
+                        num = Math.floor(Math.random() * 79) + 11;
+                    } while (Math.floor(num/10) + (num%10) >= 10); // Pastikan tanpa simpanan dulu
+                    
+                    return {
+                        text: `${num} x 11`,
+                        answer: num * 11,
+                        data: num
+                    };
+                },
+                visualizeLogic: function(num) {
+                    const digit1 = Math.floor(num / 10);
+                    const digit2 = num % 10;
+                    const sum = digit1 + digit2;
+                    return `
+                        <div class="math-visual">
+                            <div>Masalah: <strong>${num} x 11</strong></div>
+                            <br>
+                            <div>1. Pisahkan angkanya: <span class="step-highlight">${digit1}</span> _ <span class="step-highlight">${digit2}</span></div>
+                            <div>2. Jumlahkan keduanya: ${digit1} + ${digit2} = <span class="step-highlight">${sum}</span></div>
+                            <div>3. Sisipkan di tengah: ${digit1} <span class="step-highlight">${sum}</span> ${digit2}</div>
+                            <br>
+                            <div>Hasilnya: <strong>${digit1}${sum}${digit2}</strong></div>
+                        </div>
+                    `;
+                }
+            },
+            {
+                id: 'modul2',
+                title: 'Bab 2: Kuadrat Akhiran 5',
+                desc: 'Cara kilat mengkuadratkan angka berakhiran 5 (misal: 35²). Kalikan angka depan dengan angka kakaknya (angka setelahnya), lalu tempelkan 25 di belakang.',
+                generateLogic: function() {
+                    // Menghasilkan angka 15, 25, 35 ... 95
+                    const prefix = Math.floor(Math.random() * 9) + 1;
+                    const num = prefix * 10 + 5;
+                    return {
+                        text: `${num}²`,
+                        answer: num * num,
+                        data: prefix
+                    };
+                },
+                visualizeLogic: function(prefix) {
+                    const num = prefix * 10 + 5;
+                    const nextNum = prefix + 1;
+                    const frontPart = prefix * nextNum;
+                    return `
+                        <div class="math-visual">
+                            <div>Masalah: <strong>${num} x ${num}</strong></div>
+                            <br>
+                            <div>1. Ambil angka depannya: <span class="step-highlight">${prefix}</span></div>
+                            <div>2. Kalikan dengan angka setelahnya (${nextNum}): <br> ${prefix} x ${nextNum} = <span class="step-highlight">${frontPart}</span></div>
+                            <div>3. Kuadratkan akhiran 5 (selalu 25): <span class="step-highlight">25</span></div>
+                            <div>4. Gabungkan: ${frontPart} dan 25</div>
+                            <br>
+                            <div>Hasilnya: <strong>${frontPart}25</strong></div>
+                        </div>
+                    `;
+                }
+            }
+        ];
+
+        // State Aplikasi
+        let currentModuleIndex = -1;
+        let currentQuestionData = null;
+
+        // Inisialisasi UI
+        function initApp() {
+            const sidebar = document.getElementById('sidebar');
+            vedicModules.forEach((mod, index) => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.innerText = mod.title;
+                menuItem.onclick = () => loadModule(index, menuItem);
+                sidebar.appendChild(menuItem);
+            });
+        }
+
+        // Memuat Modul Terpilih
+        function loadModule(index, element) {
+            // Update UI Menu
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            currentModuleIndex = index;
+            const mod = vedicModules[index];
+
+            // Set Teks
+            document.getElementById('module-title').innerText = mod.title;
+            document.getElementById('module-desc').innerText = mod.desc;
+            
+            // Tampilkan area interaktif dan generate soal
+            document.getElementById('interactive-area').style.display = 'block';
+            document.getElementById('illustration-box').innerHTML = '<div style="color: #7f8c8d; font-size: 18px;">Klik "Lihat Ilustrasi" saat mengerjakan untuk melihat rahasianya.</div>';
+            
+            generateNewQuestion();
+        }
+
+        // Membuat Soal Baru
+        function generateNewQuestion() {
+            if (currentModuleIndex === -1) return;
+            
+            const mod = vedicModules[currentModuleIndex];
+            currentQuestionData = mod.generateLogic();
+            
+            document.getElementById('question').innerText = currentQuestionData.text;
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').innerText = '';
+            document.getElementById('answer').focus();
+        }
+
+        // Mengecek Jawaban
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            const feedbackEl = document.getElementById('feedback');
+            
+            if (userAnswer === currentQuestionData.answer) {
+                feedbackEl.innerText = "Tepat Sekali! 🎉";
+                feedbackEl.style.color = "#27ae60";
+                setTimeout(generateNewQuestion, 1500);
+            } else {
+                feedbackEl.innerText = "Masih kurang tepat, coba lagi!";
+                feedbackEl.style.color = "#e74c3c";
+            }
+        }
+
+        // Menampilkan Ilustrasi Visual secara Dinamis
+        function showIllustration() {
+            if (currentModuleIndex === -1 || !currentQuestionData) return;
+            const mod = vedicModules[currentModuleIndex];
+            const visualHTML = mod.visualizeLogic(currentQuestionData.data);
+            document.getElementById('illustration-box').innerHTML = visualHTML;
+        }
+
+        // Enter untuk submit
+        document.getElementById("answer").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") checkAnswer();
+        });
+
+        // Mulai aplikasi
+        initApp();
+    </script>
+</body>
+</html>
