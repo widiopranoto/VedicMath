@@ -1,6 +1,10 @@
 // Main Application Logic
 console.log("Vedic Math App Initialized");
 
+// Konfigurasi Google Sheet
+// INSTRUKSI: Ganti string di bawah ini dengan URL Web App dari Google Apps Script Anda.
+const GOOGLE_SCRIPT_URL = '';
+
 // Global State
 const appState = {
     user: null, // { username, level, score, unlockedTopics, history }
@@ -14,6 +18,13 @@ const appState = {
         wrongCount: 0,
         timerInterval: null
     }
+};
+
+const LEVEL_UNLOCKS = {
+    2: ['sq5'],
+    3: ['sub_nikhilam'],
+    4: ['base100'],
+    5: ['mul_cross']
 };
 
 // ==========================================
@@ -391,6 +402,7 @@ function handleLogin() {
         };
         saveUser();
         SoundManager.play('begin');
+        syncToGoogleSheet(); // Sinkronisasi awal saat login
         showDashboard();
     } else {
         SoundManager.play('fail');
@@ -427,17 +439,9 @@ function levelUp() {
     appState.user.level++;
     appState.user.xp = 0; // Reset XP for next level, or keep cumulative? Let's reset for simplicity in UI bar
     
-    // Unlock Topics Logic
-    const unlocks = {
-        2: ['sq5'],
-        3: ['sub_nikhilam'],
-        4: ['base100'],
-        5: ['mul_cross']
-    };
-    
     SoundManager.play('levelup');
-    if (unlocks[appState.user.level]) {
-        const newTopics = unlocks[appState.user.level];
+    if (LEVEL_UNLOCKS[appState.user.level]) {
+        const newTopics = LEVEL_UNLOCKS[appState.user.level];
         appState.user.unlockedTopics.push(...newTopics);
         alert(`🎉 LEVEL UP! Kamu naik ke Level ${appState.user.level}!\nTopik baru terbuka: ${newTopics.map(id => curriculum[id].title).join(', ')}`);
     } else {
@@ -454,7 +458,35 @@ function saveUser() {
     if (appState.user) {
         localStorage.setItem('vedicUser', JSON.stringify(appState.user));
         updateHeader();
+        // Kita sinkronkan juga setiap kali saveUser dipanggil (level up, game selesai)
+        // Agar data di sheet selalu terupdate
+        syncToGoogleSheet();
     }
+}
+
+function syncToGoogleSheet() {
+    if (!appState.user || !GOOGLE_SCRIPT_URL) return;
+
+    // Payload data yang akan dikirim
+    const payload = {
+        username: appState.user.username,
+        level: appState.user.level,
+        score: appState.user.totalScore
+    };
+
+    // Menggunakan fetch dengan mode no-cors untuk Google Apps Script
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    }).then(() => {
+        console.log("Data sent to Google Sheet");
+    }).catch(err => {
+        console.warn("Failed to send data to Google Sheet:", err);
+    });
 }
 
 function updateHeader() {
@@ -514,6 +546,37 @@ function showDashboard() {
         return html;
     };
 
+    // Calculate Unlock Message
+    const nextLevel = appState.user.level + 1;
+    const xpTarget = appState.user.level * 100;
+    const xpRemaining = xpTarget - appState.user.xp;
+
+    let unlockMsg = '';
+    if (LEVEL_UNLOCKS[nextLevel]) {
+        const topicNames = LEVEL_UNLOCKS[nextLevel].map(id => curriculum[id].title).join(', ');
+        unlockMsg = `
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-sm flex items-center shadow-sm animate-pulse">
+                <span class="text-xl mr-3">🚀</span>
+                <div>
+                    <span class="font-bold text-blue-800">Misi Selanjutnya:</span>
+                    <p class="text-blue-600">Dapatkan <strong>${xpRemaining} XP</strong> lagi untuk membuka <span class="font-bold underline">${topicNames}</span>!</p>
+                </div>
+            </div>
+        `;
+    } else {
+        // Cek jika masih ada level selanjutnya meskipun tidak ada unlock spesifik
+        // Atau jika sudah max level
+        unlockMsg = `
+            <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-6 text-sm flex items-center shadow-sm">
+                <span class="text-xl mr-3">🏆</span>
+                <div>
+                    <span class="font-bold text-green-800">Luar Biasa!</span>
+                    <p class="text-green-600">Terus berlatih untuk meningkatkan skormu!</p>
+                </div>
+            </div>
+        `;
+    }
+
     main.innerHTML = `
         <div class="animate-fade-in pb-8">
             <div class="bg-brand-light/10 p-4 rounded-xl mb-4 flex items-center justify-between">
@@ -527,6 +590,8 @@ function showDashboard() {
                 </div>
             </div>
             
+            ${unlockMsg}
+
             ${renderCategory('populer', 'Trik Populer')}
             ${renderCategory('dasar', 'Dasar Veda')}
             
