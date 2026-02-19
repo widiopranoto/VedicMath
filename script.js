@@ -3,7 +3,7 @@ console.log("Vedic Math App Initialized");
 
 // Konfigurasi Google Sheet
 // INSTRUKSI: Ganti string di bawah ini dengan URL Web App dari Google Apps Script Anda.
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzD74MdxM-S1mEHcsJn--J-kLs617aSsskjsib9eiUdEt15YiIEkj4gB7Ks9h9tQbbo4w/exec'; 
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSniWvZT7lJkNHtXEDdMy5LauRza9Tel6j2VnJ4o1ozP2XKYXOOUAkZqRZL3HFrNU5Lg/exec'; 
 
 // Global State
 const appState = {
@@ -215,6 +215,81 @@ const curriculum = {
             };
         }
     },
+    "add_beginner": {
+        id: "add_beginner",
+        title: "Penjumlahan Pemula",
+        category: "dasar",
+        description: "Latihan penjumlahan 2 digit dan 1 digit untuk pemula.",
+        difficulty: 1,
+        tutorial: `
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-brand">Mulai dari Satuan</h3>
+                <p>Belajar menjumlahkan angka puluhan dengan angka satuan.</p>
+                
+                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200 text-center">
+                    <p class="font-bold text-xl mb-2">Contoh: 23 + 5</p>
+                    <div class="text-left text-sm ml-4 space-y-2">
+                        <p>1. Simpan angka <strong>20</strong> di kepala.</p>
+                        <p>2. Jumlahkan angka belakangnya: <strong>3 + 5 = 8</strong>.</p>
+                        <p>3. Gabungkan kembali: <strong>20 + 8 = 28</strong>.</p>
+                    </div>
+                    <div class="mt-4 text-3xl font-bold text-brand">
+                        Hasil: 28
+                    </div>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded-lg text-sm">
+                    <strong>Tantangan:</strong> Jika hasilnya lebih dari 9, jangan lupa tambahkan ke angka depan! <br>
+                    Contoh: 28 + 4 -> 8+4=12 -> 20+12=32.
+                </div>
+            </div>
+        `,
+        generator: (level) => {
+            // 2 digit + 1 digit
+            const n1 = Math.floor(Math.random() * 89) + 10; // 10-99
+            const n2 = Math.floor(Math.random() * 9) + 1;   // 1-9
+            return {
+                q: `${n1} + ${n2}`,
+                a: n1 + n2
+            };
+        }
+    },
+    "add_compl": {
+        id: "add_compl",
+        title: "Penjumlahan Cepat",
+        category: "dasar",
+        description: "Melengkapi ke 10.",
+        difficulty: 1,
+        tutorial: `
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-brand">Melengkapi ke Puluhan Terdekat</h3>
+                <p>Saat menjumlahkan angka besar, bulatkan salah satu angka ke puluhan terdekat agar lebih mudah.</p>
+                
+                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200 text-center">
+                    <p class="font-bold text-xl mb-2">Contoh: 28 + 15</p>
+                    <div class="text-left text-sm ml-4 space-y-2">
+                        <p>1. Lihat <strong>28</strong>. Butuh <strong>2</strong> agar menjadi <strong>30</strong>.</p>
+                        <p>2. Ambil 2 dari 15 (15 - 2 = 13).</p>
+                        <p>3. Jumlahkan: <strong>30 + 13</strong></p>
+                    </div>
+                    <div class="mt-4 text-3xl font-bold text-brand">
+                        Hasil: 43
+                    </div>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded-lg text-sm">
+                    <strong>Tips:</strong> Selalu cari angka yang paling dekat dengan puluhan (ujungnya 8 atau 9).
+                </div>
+            </div>
+        `,
+        generator: (level) => {
+            // Just simple addition but encourage speed
+            const n1 = Math.floor(Math.random() * 50) + 20;
+            const n2 = Math.floor(Math.random() * 50) + 20;
+            return {
+                q: `${n1} + ${n2}`,
+                a: n1 + n2
+            };
+        }
+    },
     "sub_nikhilam": {
         id: "sub_nikhilam",
         title: "Pengurangan Ajaib",
@@ -296,43 +371,6 @@ const curriculum = {
             return {
                 q: `${n1} × ${n2}`,
                 a: n1 * n2
-            };
-        }
-    },
-    "add_compl": {
-        id: "add_compl",
-        title: "Penjumlahan Cepat",
-        category: "dasar",
-        description: "Melengkapi ke 10.",
-        difficulty: 1,
-        tutorial: `
-            <div class="space-y-4">
-                <h3 class="text-lg font-bold text-brand">Melengkapi ke Puluhan Terdekat</h3>
-                <p>Saat menjumlahkan angka besar, bulatkan salah satu angka ke puluhan terdekat agar lebih mudah.</p>
-                
-                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200 text-center">
-                    <p class="font-bold text-xl mb-2">Contoh: 28 + 15</p>
-                    <div class="text-left text-sm ml-4 space-y-2">
-                        <p>1. Lihat <strong>28</strong>. Butuh <strong>2</strong> agar menjadi <strong>30</strong>.</p>
-                        <p>2. Ambil 2 dari 15 (15 - 2 = 13).</p>
-                        <p>3. Jumlahkan: <strong>30 + 13</strong></p>
-                    </div>
-                    <div class="mt-4 text-3xl font-bold text-brand">
-                        Hasil: 43
-                    </div>
-                </div>
-                <div class="bg-yellow-50 p-3 rounded-lg text-sm">
-                    <strong>Tips:</strong> Selalu cari angka yang paling dekat dengan puluhan (ujungnya 8 atau 9).
-                </div>
-            </div>
-        `,
-        generator: (level) => {
-            // Just simple addition but encourage speed
-            const n1 = Math.floor(Math.random() * 50) + 20;
-            const n2 = Math.floor(Math.random() * 50) + 20;
-            return {
-                q: `${n1} + ${n2}`,
-                a: n1 + n2
             };
         }
     }
@@ -602,7 +640,7 @@ function showDashboard() {
             ${unlockMsg}
 
             ${renderCategory('populer', 'Trik Populer')}
-            ${renderCategory('dasar', 'Dasar Veda')}
+            ${renderCategory('dasar', 'Dasar Vedic Math')}
             
             <div class="mt-8 text-center">
                 <button onclick="logout()" class="text-sm text-red-400 underline hover:text-red-600">Ganti Akun / Reset</button>
