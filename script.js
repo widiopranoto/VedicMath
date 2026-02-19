@@ -3,7 +3,7 @@ console.log("Vedic Math App Initialized");
 
 // Konfigurasi Google Sheet
 // INSTRUKSI: Ganti string di bawah ini dengan URL Web App dari Google Apps Script Anda.
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSniWvZT7lJkNHtXEDdMy5LauRza9Tel6j2VnJ4o1ozP2XKYXOOUAkZqRZL3HFrNU5Lg/exec'; 
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWMCog5eJUxsP7t2WYRF_B3RVfJMoVCM-7sQe0RekH40n8GK22Xn0nvmH-UOkeFSh--Q/exec'; 
 
 // Global State
 const appState = {
@@ -444,7 +444,7 @@ function handleLogin() {
             level: 1,
             xp: 0,
             totalScore: 0,
-            unlockedTopics: ['add_compl', 'mul11'], // Start with easiest
+            unlockedTopics: ['add_beginner', 'add_compl', 'mul11'], // Start with easiest
             history: {}
         };
         saveUser();
