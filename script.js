@@ -444,7 +444,7 @@ function handleLogin() {
             level: 1,
             xp: 0,
             totalScore: 0,
-            unlockedTopics: ['add_compl', 'mul11'], // Start with easiest
+            unlockedTopics: ['add_beginner', 'add_compl', 'mul11'], // Start with easiest
             history: {}
         };
         saveUser();
