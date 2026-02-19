@@ -307,13 +307,22 @@ const curriculum = {
         difficulty: 1,
         tutorial: `
             <div class="space-y-4">
-                <h3 class="text-lg font-bold text-brand">Melengkapi 10 (Spark Addition)</h3>
-                <p>Saat menjumlahkan, cari pasangan yang membentuk 10.</p>
+                <h3 class="text-lg font-bold text-brand">Melengkapi ke Puluhan Terdekat</h3>
+                <p>Saat menjumlahkan angka besar, bulatkan salah satu angka ke puluhan terdekat agar lebih mudah.</p>
+
                 <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200 text-center">
-                    <p>Contoh: <strong>8 + 5</strong></p>
-                    <p class="text-sm">8 butuh 2 untuk jadi 10.</p>
-                    <p class="text-sm">Ambil 2 dari 5 (sisa 3).</p>
-                    <p class="font-bold mt-2">10 + 3 = 13</p>
+                    <p class="font-bold text-xl mb-2">Contoh: 28 + 15</p>
+                    <div class="text-left text-sm ml-4 space-y-2">
+                        <p>1. Lihat <strong>28</strong>. Butuh <strong>2</strong> agar menjadi <strong>30</strong>.</p>
+                        <p>2. Ambil 2 dari 15 (15 - 2 = 13).</p>
+                        <p>3. Jumlahkan: <strong>30 + 13</strong></p>
+                    </div>
+                    <div class="mt-4 text-3xl font-bold text-brand">
+                        Hasil: 43
+                    </div>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded-lg text-sm">
+                    <strong>Tips:</strong> Selalu cari angka yang paling dekat dengan puluhan (ujungnya 8 atau 9).
                 </div>
             </div>
         `,
